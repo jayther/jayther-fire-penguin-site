@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Projects from './pages/Projects'
+import './App.scss'
 
 function App() {
   return (

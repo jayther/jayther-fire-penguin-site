@@ -3,21 +3,21 @@ const Projects = () => {
     {
       title: 'Project 1',
       description: 'A web application built with React and TypeScript',
-      image: 'https://via.placeholder.com/300x200',
+      image: 'https://placehold.co/300x200',
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
       link: '#'
     },
     {
       title: 'Project 2',
       description: 'A responsive website with modern design',
-      image: 'https://via.placeholder.com/300x200',
+      image: 'https://placehold.co/300x200',
       technologies: ['HTML', 'CSS', 'JavaScript'],
       link: '#'
     },
     {
       title: 'Project 3',
       description: 'A full-stack application with Firebase',
-      image: 'https://via.placeholder.com/300x200',
+      image: 'https://placehold.co/300x200',
       technologies: ['React', 'Firebase', 'Node.js'],
       link: '#'
     }
