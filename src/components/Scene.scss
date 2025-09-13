@@ -1,0 +1,45 @@
+
+.scene {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(-90deg) rotateY(0deg) translateZ(0em) translateY(50em);
+  // transform: rotateY(0deg);
+  transition: transform 500ms ease-in-out;
+}
+
+// .front-wall, .left-wall, .right-wall {
+//   position: absolute;
+//   background-color: #222297;
+//   background-image: repeating-radial-gradient( circle at 0 0, transparent 0, #222297 1em ), repeating-linear-gradient( #03076055, #030760 );
+//   width: 20em;
+//   height: 20em;
+//   top: -16em;
+//   left:-10em;
+//   transform: translateZ(-10em);
+// }
+
+// .left-wall {
+//   left: -20em;
+//   transform: rotateY(-90deg);
+// }
+// .right-wall {
+//   transform: rotateY(90deg);
+//   left: 0;
+// }
+
+
+// @keyframes sceneRotateLeft {
+//   to { transform: rotateY(-360deg); }
+// }
+
+// @keyframes sceneRotateRight {
+//   to { transform: rotateY(360deg); }
+// }
+
+// @keyframes sceneMoveForward {
+//   to { transform: translateZ(1000em); }
+// }
+
+// @keyframes sceneMoveBack {
+//   to { transform: translateZ(-1000em); }
+// }
