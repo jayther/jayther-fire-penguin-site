@@ -7,12 +7,29 @@ import Contact from './pages/Contact'
 import Projects from './pages/Projects'
 import './App.scss'
 import Scene from './components/Scene'
+import useCamera from './hooks/UseCamera'
+import useCameraController from './hooks/UseCameraController'
+import { useEffect, useState } from 'react'
+import DebugStats from './components/DebugStats'
+import useGlobalCamera from './hooks/UseGlobalCamera'
 
 function App() {
+  
+  const [sceneDiv, setSceneDiv] = useState<HTMLDivElement | null>(null)
+  const camera = useGlobalCamera()
+  useCameraController(camera)
+
+  useEffect(() => {
+    camera.setSceneDiv(sceneDiv)
+  }, [sceneDiv, camera])
+
   return (
-    <div className="app">
-      <Scene />
-    </div>
+    <>
+      <div className="app">
+        <Scene ref={setSceneDiv} />
+      </div>
+      <DebugStats />
+    </>
   )
   // return (
   //   <Router>
