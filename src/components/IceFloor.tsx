@@ -1,8 +1,12 @@
-import useClassName from '../hooks/UseClassName'
-import './IceFloor.scss'
+import useClassName from '../hooks/UseClassName';
+import './IceFloor.scss';
 
 const IceFloorBlockGroupJ = ({ flipped = false }: { flipped?: boolean }) => {
-  const className = useClassName('ice-floor-block-group', 'ice-floor-block-group-j', flipped && 'flipped')
+  const className = useClassName(
+    'ice-floor-block-group',
+    'ice-floor-block-group-j',
+    flipped && 'flipped'
+  );
 
   return (
     <div className={className}>
@@ -14,11 +18,15 @@ const IceFloorBlockGroupJ = ({ flipped = false }: { flipped?: boolean }) => {
       <div className="ice-floor-block b-j-6"></div>
       <div className="ice-floor-block b-j-7"></div>
     </div>
-  )
-}
+  );
+};
 
 const IceFloorBlockGroupA = ({ flipped = false }: { flipped?: boolean }) => {
-  const className = useClassName('ice-floor-block-group', 'ice-floor-block-group-a', flipped && 'flipped')
+  const className = useClassName(
+    'ice-floor-block-group',
+    'ice-floor-block-group-a',
+    flipped && 'flipped'
+  );
 
   return (
     <div className={className}>
@@ -35,11 +43,15 @@ const IceFloorBlockGroupA = ({ flipped = false }: { flipped?: boolean }) => {
       <div className="ice-floor-block b-a-11"></div>
       <div className="ice-floor-block b-a-12"></div>
     </div>
-  )
-}
+  );
+};
 
 const IceFloorBlockGroupY = ({ flipped = false }: { flipped?: boolean }) => {
-  const className = useClassName('ice-floor-block-group', 'ice-floor-block-group-y', flipped && 'flipped')
+  const className = useClassName(
+    'ice-floor-block-group',
+    'ice-floor-block-group-y',
+    flipped && 'flipped'
+  );
 
   return (
     <div className={className}>
@@ -53,8 +65,8 @@ const IceFloorBlockGroupY = ({ flipped = false }: { flipped?: boolean }) => {
       <div className="ice-floor-block b-y-8"></div>
       <div className="ice-floor-block b-y-9"></div>
     </div>
-  )
-}
+  );
+};
 
 const IceFloorBlockGroupT = () => {
   return (
@@ -67,18 +79,18 @@ const IceFloorBlockGroupT = () => {
       <div className="ice-floor-block b-t-6"></div>
       <div className="ice-floor-block b-t-7"></div>
     </div>
-  )
-}
+  );
+};
 
 const IceFloorBlockGroupH = () => {
-  return <IceFloorBlockGroupY flipped />
-}
+  return <IceFloorBlockGroupY flipped />;
+};
 const IceFloorBlockGroupE = () => {
-  return <IceFloorBlockGroupA flipped />
-}
+  return <IceFloorBlockGroupA flipped />;
+};
 const IceFloorBlockGroupR = () => {
-  return <IceFloorBlockGroupJ flipped />
-}
+  return <IceFloorBlockGroupJ flipped />;
+};
 
 const IceFloor = () => {
   return (
@@ -93,9 +105,7 @@ const IceFloor = () => {
         <IceFloorBlockGroupR />
       </div>
     </div>
-  )
-}
+  );
+};
 
-
-export default IceFloor
-
+export default IceFloor;

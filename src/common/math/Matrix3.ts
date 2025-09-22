@@ -4,15 +4,17 @@ export class Matrix3 {
   public elements: number[];
 
   constructor(
-    m00: number = 1, m01: number = 0, m02: number = 0,
-    m10: number = 0, m11: number = 1, m12: number = 0,
-    m20: number = 0, m21: number = 0, m22: number = 1
+    m00: number = 1,
+    m01: number = 0,
+    m02: number = 0,
+    m10: number = 0,
+    m11: number = 1,
+    m12: number = 0,
+    m20: number = 0,
+    m21: number = 0,
+    m22: number = 1
   ) {
-    this.elements = [
-      m00, m01, m02,
-      m10, m11, m12,
-      m20, m21, m22
-    ];
+    this.elements = [m00, m01, m02, m10, m11, m12, m20, m21, m22];
   }
 
   // Accessors
@@ -49,9 +51,15 @@ export class Matrix3 {
 
   transpose(): Matrix3 {
     return new Matrix3(
-      this.get(0, 0), this.get(1, 0), this.get(2, 0),
-      this.get(0, 1), this.get(1, 1), this.get(2, 1),
-      this.get(0, 2), this.get(1, 2), this.get(2, 2)
+      this.get(0, 0),
+      this.get(1, 0),
+      this.get(2, 0),
+      this.get(0, 1),
+      this.get(1, 1),
+      this.get(2, 1),
+      this.get(0, 2),
+      this.get(1, 2),
+      this.get(2, 2)
     );
   }
 
@@ -78,15 +86,60 @@ export class Matrix3 {
     const invDet = 1 / det;
     const result = new Matrix3();
 
-    result.set(0, 0, (this.get(1, 1) * this.get(2, 2) - this.get(1, 2) * this.get(2, 1)) * invDet);
-    result.set(0, 1, (this.get(0, 2) * this.get(2, 1) - this.get(0, 1) * this.get(2, 2)) * invDet);
-    result.set(0, 2, (this.get(0, 1) * this.get(1, 2) - this.get(0, 2) * this.get(1, 1)) * invDet);
-    result.set(1, 0, (this.get(1, 2) * this.get(2, 0) - this.get(1, 0) * this.get(2, 2)) * invDet);
-    result.set(1, 1, (this.get(0, 0) * this.get(2, 2) - this.get(0, 2) * this.get(2, 0)) * invDet);
-    result.set(1, 2, (this.get(0, 2) * this.get(1, 0) - this.get(0, 0) * this.get(1, 2)) * invDet);
-    result.set(2, 0, (this.get(1, 0) * this.get(2, 1) - this.get(1, 1) * this.get(2, 0)) * invDet);
-    result.set(2, 1, (this.get(0, 1) * this.get(2, 0) - this.get(0, 0) * this.get(2, 1)) * invDet);
-    result.set(2, 2, (this.get(0, 0) * this.get(1, 1) - this.get(0, 1) * this.get(1, 0)) * invDet);
+    result.set(
+      0,
+      0,
+      (this.get(1, 1) * this.get(2, 2) - this.get(1, 2) * this.get(2, 1)) *
+        invDet
+    );
+    result.set(
+      0,
+      1,
+      (this.get(0, 2) * this.get(2, 1) - this.get(0, 1) * this.get(2, 2)) *
+        invDet
+    );
+    result.set(
+      0,
+      2,
+      (this.get(0, 1) * this.get(1, 2) - this.get(0, 2) * this.get(1, 1)) *
+        invDet
+    );
+    result.set(
+      1,
+      0,
+      (this.get(1, 2) * this.get(2, 0) - this.get(1, 0) * this.get(2, 2)) *
+        invDet
+    );
+    result.set(
+      1,
+      1,
+      (this.get(0, 0) * this.get(2, 2) - this.get(0, 2) * this.get(2, 0)) *
+        invDet
+    );
+    result.set(
+      1,
+      2,
+      (this.get(0, 2) * this.get(1, 0) - this.get(0, 0) * this.get(1, 2)) *
+        invDet
+    );
+    result.set(
+      2,
+      0,
+      (this.get(1, 0) * this.get(2, 1) - this.get(1, 1) * this.get(2, 0)) *
+        invDet
+    );
+    result.set(
+      2,
+      1,
+      (this.get(0, 1) * this.get(2, 0) - this.get(0, 0) * this.get(2, 1)) *
+        invDet
+    );
+    result.set(
+      2,
+      2,
+      (this.get(0, 0) * this.get(1, 1) - this.get(0, 1) * this.get(1, 0)) *
+        invDet
+    );
 
     return result;
   }
@@ -94,36 +147,41 @@ export class Matrix3 {
   toEulerAngles(): Vector3 {
     return new Vector3(
       Math.atan2(this.get(2, 1), this.get(2, 2)),
-      Math.atan2(-this.get(2, 0), Math.sqrt(this.get(2, 1) * this.get(2, 1) + this.get(2, 2) * this.get(2, 2))),
+      Math.atan2(
+        -this.get(2, 0),
+        Math.sqrt(
+          this.get(2, 1) * this.get(2, 1) + this.get(2, 2) * this.get(2, 2)
+        )
+      ),
       Math.atan2(this.get(1, 0), this.get(0, 0))
     );
   }
 
-  toAxisAngle(): { axis: Vector3, angle: number } {
+  toAxisAngle(): { axis: Vector3; angle: number } {
     // The trace of the matrix is the sum of diagonal elements
     const trace = this.get(0, 0) + this.get(1, 1) + this.get(2, 2);
-    
+
     // The angle can be calculated from the trace
     // Note: We clamp the value to [-1,1] to handle floating point errors
     const cosAngle = (trace - 1) / 2;
     const angle = Math.acos(Math.max(-1, Math.min(1, cosAngle)));
-    
+
     // The axis is derived from the skew-symmetric matrix components
     const axis = new Vector3(
       this.get(2, 1) - this.get(1, 2),
-      this.get(0, 2) - this.get(2, 0), 
+      this.get(0, 2) - this.get(2, 0),
       this.get(1, 0) - this.get(0, 1)
     );
-    
+
     // When angle is 0 or PI, axis calculation becomes unstable
     if (Math.abs(angle) < 1e-10 || Math.abs(angle - Math.PI) < 1e-10) {
       // Return a default axis in these cases
       return { axis: Vector3.up(), angle };
     }
-    
+
     // Normalize the axis
     axis.normalizeMut();
-    
+
     return { axis, angle };
   }
 
@@ -173,7 +231,12 @@ export class Matrix3 {
     );
   }
 
-  static fromQuaternion(qx: number, qy: number, qz: number, qw: number): Matrix3 {
+  static fromQuaternion(
+    qx: number,
+    qy: number,
+    qz: number,
+    qw: number
+  ): Matrix3 {
     const xx = qx * qx;
     const yy = qy * qy;
     const zz = qz * qz;
@@ -185,18 +248,30 @@ export class Matrix3 {
     const wz = qw * qz;
 
     return new Matrix3(
-      1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy),
-      2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx),
-      2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy)
+      1 - 2 * (yy + zz),
+      2 * (xy - wz),
+      2 * (xz + wy),
+      2 * (xy + wz),
+      1 - 2 * (xx + zz),
+      2 * (yz - wx),
+      2 * (xz - wy),
+      2 * (yz + wx),
+      1 - 2 * (xx + yy)
     );
   }
 
   // Utility methods
   clone(): Matrix3 {
     return new Matrix3(
-      this.get(0, 0), this.get(0, 1), this.get(0, 2),
-      this.get(1, 0), this.get(1, 1), this.get(1, 2),
-      this.get(2, 0), this.get(2, 1), this.get(2, 2)
+      this.get(0, 0),
+      this.get(0, 1),
+      this.get(0, 2),
+      this.get(1, 0),
+      this.get(1, 1),
+      this.get(1, 2),
+      this.get(2, 0),
+      this.get(2, 1),
+      this.get(2, 2)
     );
   }
 
@@ -229,31 +304,19 @@ export class Matrix3 {
   static rotationX(angle: number): Matrix3 {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
-    return new Matrix3(
-      1, 0, 0,
-      0, cos, -sin,
-      0, sin, cos
-    );
+    return new Matrix3(1, 0, 0, 0, cos, -sin, 0, sin, cos);
   }
 
   static rotationY(angle: number): Matrix3 {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
-    return new Matrix3(
-      cos, 0, sin,
-      0, 1, 0,
-      -sin, 0, cos
-    );
+    return new Matrix3(cos, 0, sin, 0, 1, 0, -sin, 0, cos);
   }
 
   static rotationZ(angle: number): Matrix3 {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
-    return new Matrix3(
-      cos, -sin, 0,
-      sin, cos, 0,
-      0, 0, 1
-    );
+    return new Matrix3(cos, -sin, 0, sin, cos, 0, 0, 0, 1);
   }
 }
 

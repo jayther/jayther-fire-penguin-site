@@ -5,9 +5,7 @@
   top: 1em;
   z-index: 0;
   position: absolute;
-  transform:
-    translate(-50%, -50%)
-    rotateX(90deg)
+  transform: translate(-50%, -50%) rotateX(90deg)
     translateZ(calc(var(--unit-size) * 0));
 }
 
@@ -31,8 +29,7 @@
   position: absolute;
 
   &.flipped {
-    transform:
-      translate(calc(var(--unit-size) * 3), calc(var(--unit-size) * 5))
+    transform: translate(calc(var(--unit-size) * 3), calc(var(--unit-size) * 5))
       rotateZ(180deg);
   }
 }

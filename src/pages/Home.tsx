@@ -3,8 +3,9 @@ const Home = () => {
     <div className="min-h-[80vh] flex flex-col justify-center items-center">
       <h1 className="text-5xl font-bold mb-6">Welcome to My Portfolio</h1>
       <p className="text-xl text-gray-600 max-w-2xl text-center mb-8">
-        I'm a passionate developer creating beautiful and functional web experiences.
-        Explore my work and get in touch if you'd like to collaborate!
+        I'm a passionate developer creating beautiful and functional web
+        experiences. Explore my work and get in touch if you'd like to
+        collaborate!
       </p>
       <div className="flex space-x-4">
         <a
@@ -21,7 +22,7 @@ const Home = () => {
         </a>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home 
+export default Home;
