@@ -4,7 +4,7 @@ import Vector3 from './math/Vector3';
 
 class DebugCameraController {
   private moveSpeed = 5.0;
-  private rotationSpeed = Math.PI / 8;
+  private rotationSpeed = Math.PI / 24;
 
   constructor(private camera: Camera) {
     window.addEventListener('keydown', this.handleKeyDown);

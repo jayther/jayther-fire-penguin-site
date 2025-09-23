@@ -95,7 +95,7 @@ const IceFloorBlockGroupR = () => {
 const IceFloor = () => {
   return (
     <div className="ice-floor">
-      <div className="ice-floor-block-group-container">
+      {/* <div className="ice-floor-block-group-container">
         <IceFloorBlockGroupJ />
         <IceFloorBlockGroupA />
         <IceFloorBlockGroupY />
@@ -103,7 +103,7 @@ const IceFloor = () => {
         <IceFloorBlockGroupH />
         <IceFloorBlockGroupE />
         <IceFloorBlockGroupR />
-      </div>
+      </div> */}
     </div>
   );
 };
