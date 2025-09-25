@@ -88,6 +88,24 @@ class DebugCameraController {
       );
       this.camera.setRotation(newRotation);
     }
+    if (event.key === ' ') {
+      const currentPosition = this.camera.getPosition();
+      const newPosition = new Vector3(
+        currentPosition.x,
+        currentPosition.y - this.moveSpeed,
+        currentPosition.z,
+      );
+      this.camera.setPosition(newPosition);
+    }
+    if (event.key === 'Control') {
+      const currentPosition = this.camera.getPosition();
+      const newPosition = new Vector3(
+        currentPosition.x,
+        currentPosition.y + this.moveSpeed,
+        currentPosition.z,
+      );
+      this.camera.setPosition(newPosition);
+    }
   };
 }
 

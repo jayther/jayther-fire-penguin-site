@@ -1,0 +1,57 @@
+.ocean {
+  background-color: var(--j-blue);
+
+  width: calc(var(--unit-size) * 100);
+  height: calc(var(--unit-size) * 100);
+  top: 1em;
+  z-index: -1000;
+  position: absolute;
+  transform: translate(-50%, -50%) rotateX(90deg)
+    translateZ(calc(var(--unit-size) * -1));
+}
+
+.ocean-wave {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ocean-wave-1 {
+  // background-image: 
+  //   repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0) 280px, rgba(255,255,255,0.05) 560px);
+  background-image: url('../assets/wave-texture-256.png');
+  background-size: 50% 50%;
+  background-repeat: repeat;
+  animation: ocean-wave-1-animation 22s ease-in-out infinite;
+}
+.ocean-wave-2 {
+  // background-image: 
+  //   repeating-linear-gradient(115deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0) 160px, rgba(255,255,255,0.1) 320px);
+  // background-image: 
+  //   repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0) 35px, rgba(255,255,255,0.05) 70px);
+  background-image: url('../assets/wave-texture-256.png');
+  background-size: 50% 50%;
+  background-repeat: repeat;
+  transform: rotate(90deg);
+  animation: ocean-wave-2-animation 6s ease-in-out infinite;
+}
+
+@keyframes ocean-wave-1-animation {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(160px);
+  }
+}
+
+@keyframes ocean-wave-2-animation {
+  0%, 100% {
+    transform: translateX(0px) rotate(75deg);
+  }
+  50% {
+    transform: translateX(160px) rotate(75deg);
+  }
+}
