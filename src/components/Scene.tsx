@@ -2,6 +2,7 @@ import './Scene.scss';
 import IceFloor from './IceFloor';
 import { forwardRef, ForwardedRef } from 'react';
 import Ocean from './Ocean';
+import Penguin from './Penguin';
 
 const Scene = forwardRef((_props: any, ref: ForwardedRef<HTMLDivElement>) => {
   return (
@@ -11,6 +12,7 @@ const Scene = forwardRef((_props: any, ref: ForwardedRef<HTMLDivElement>) => {
       <div className="right-wall"></div>
       <Ocean />
       <IceFloor />
+      <Penguin />
     </div>
   );
 });
