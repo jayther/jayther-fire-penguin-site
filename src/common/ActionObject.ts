@@ -1,23 +1,27 @@
-import Vector3 from "./math/Vector3";
-import Transform from "./Transform";
-import { EventEmitter } from "tsee";
-import { IFrameUpdatable } from "./IFrameUpdatable";
-import { globalFrameController } from "./FrameController";
+import Vector3 from './math/Vector3';
+import Transform from './Transform';
+import { EventEmitter } from 'tsee';
+import { IFrameUpdatable } from './IFrameUpdatable';
+import { globalFrameController } from './FrameController';
 
 export type ActionObjectEventMap = {
   'position-updated': ({ position }: { position: Vector3 }) => void;
   'rotation-updated': ({ rotation }: { rotation: Vector3 }) => void;
   'scale-updated': ({ scale }: { scale: Vector3 }) => void;
-}
+};
 
-
-class ActionObject extends Transform implements EventEmitter<ActionObjectEventMap>, IFrameUpdatable {
+class ActionObject
+  extends Transform
+  implements EventEmitter<ActionObjectEventMap>, IFrameUpdatable
+{
   private object: HTMLElement | null = null;
   private eventEmitter = new EventEmitter<ActionObjectEventMap>();
   private dirty = false;
   private velocity = new Vector3(0, 0, 0);
 
-  constructor({ object = null }: { object: HTMLElement | null } = { object: null }) {
+  constructor(
+    { object = null }: { object: HTMLElement | null } = { object: null }
+  ) {
     super();
     this.object = object;
     globalFrameController.addUpdatable(this);
@@ -26,7 +30,7 @@ class ActionObject extends Transform implements EventEmitter<ActionObjectEventMa
   setObject(object: HTMLElement | null): void {
     this.object = object;
   }
-  
+
   getObject(): HTMLElement | null {
     return this.object;
   }
@@ -59,31 +63,49 @@ class ActionObject extends Transform implements EventEmitter<ActionObjectEventMa
     this.eventEmitter.emit('scale-updated', { scale });
   }
 
-  on<K extends keyof ActionObjectEventMap>(event: K, listener: ActionObjectEventMap[K]): this {
+  on<K extends keyof ActionObjectEventMap>(
+    event: K,
+    listener: ActionObjectEventMap[K]
+  ): this {
     this.eventEmitter.on(event, listener);
     return this;
   }
 
-  off<K extends keyof ActionObjectEventMap>(event: K, listener: ActionObjectEventMap[K]): this {
+  off<K extends keyof ActionObjectEventMap>(
+    event: K,
+    listener: ActionObjectEventMap[K]
+  ): this {
     this.eventEmitter.off(event, listener);
     return this;
   }
 
-  emit<K extends keyof ActionObjectEventMap>(event: K, ...args: Parameters<ActionObjectEventMap[K]>): boolean {
+  emit<K extends keyof ActionObjectEventMap>(
+    event: K,
+    ...args: Parameters<ActionObjectEventMap[K]>
+  ): boolean {
     return this.eventEmitter.emit(event, ...args);
   }
 
-  once<K extends keyof ActionObjectEventMap>(event: K, listener: ActionObjectEventMap[K]): this {
+  once<K extends keyof ActionObjectEventMap>(
+    event: K,
+    listener: ActionObjectEventMap[K]
+  ): this {
     this.eventEmitter.once(event, listener);
     return this;
   }
 
-  addListener<K extends keyof ActionObjectEventMap>(event: K, listener: ActionObjectEventMap[K]): this {
+  addListener<K extends keyof ActionObjectEventMap>(
+    event: K,
+    listener: ActionObjectEventMap[K]
+  ): this {
     this.eventEmitter.addListener(event, listener);
     return this;
   }
 
-  removeListener<K extends keyof ActionObjectEventMap>(event: K, listener: ActionObjectEventMap[K]): this {
+  removeListener<K extends keyof ActionObjectEventMap>(
+    event: K,
+    listener: ActionObjectEventMap[K]
+  ): this {
     this.eventEmitter.removeListener(event, listener);
     return this;
   }
@@ -92,12 +114,18 @@ class ActionObject extends Transform implements EventEmitter<ActionObjectEventMa
     return this.eventEmitter.hasListeners(event);
   }
 
-  prependListener<K extends keyof ActionObjectEventMap>(event: K, listener: ActionObjectEventMap[K]): this {
+  prependListener<K extends keyof ActionObjectEventMap>(
+    event: K,
+    listener: ActionObjectEventMap[K]
+  ): this {
     this.eventEmitter.prependListener(event, listener);
     return this;
   }
 
-  prependOnceListener<K extends keyof ActionObjectEventMap>(event: K, listener: ActionObjectEventMap[K]): this {
+  prependOnceListener<K extends keyof ActionObjectEventMap>(
+    event: K,
+    listener: ActionObjectEventMap[K]
+  ): this {
     this.eventEmitter.prependOnceListener(event, listener);
     return this;
   }
@@ -116,7 +144,9 @@ class ActionObject extends Transform implements EventEmitter<ActionObjectEventMa
     return this.eventEmitter.getMaxListeners();
   }
 
-  listeners<K extends keyof ActionObjectEventMap>(event: K): ActionObjectEventMap[K][] {
+  listeners<K extends keyof ActionObjectEventMap>(
+    event: K
+  ): ActionObjectEventMap[K][] {
     return this.eventEmitter.listeners(event);
   }
 
@@ -144,11 +174,19 @@ class ActionObject extends Transform implements EventEmitter<ActionObjectEventMa
     if (!this.object) return;
     this.object.style.transform = `translateX(${this.getPosition().x}em) translateY(${this.getPosition().y}em) translateZ(${this.getPosition().z}em) rotateX(${this.getRotation().x}rad) rotateY(${this.getRotation().y}rad) rotateZ(${this.getRotation().z}rad) scaleX(${this.getScale().x}) scaleY(${this.getScale().y}) scaleZ(${this.getScale().z})`;
   }
-  
+
   updateFrame(deltaSeconds: number): void {
-    if (!this.dirty && this.velocity.x === 0 && this.velocity.y === 0 && this.velocity.z === 0) return;
-    
-    this.setPosition(this.getPosition().add(this.velocity.multiply(deltaSeconds)));
+    if (
+      !this.dirty &&
+      this.velocity.x === 0 &&
+      this.velocity.y === 0 &&
+      this.velocity.z === 0
+    )
+      return;
+
+    this.setPosition(
+      this.getPosition().add(this.velocity.multiply(deltaSeconds))
+    );
     this.updateStyle();
     this.dirty = false;
   }

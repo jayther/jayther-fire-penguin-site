@@ -92,7 +92,7 @@ class DebugCameraController extends CameraController {
       const newPosition = new Vector3(
         currentPosition.x,
         currentPosition.y - this.moveSpeed,
-        currentPosition.z,
+        currentPosition.z
       );
       this.camera.setPosition(newPosition);
     }
@@ -101,7 +101,7 @@ class DebugCameraController extends CameraController {
       const newPosition = new Vector3(
         currentPosition.x,
         currentPosition.y + this.moveSpeed,
-        currentPosition.z,
+        currentPosition.z
       );
       this.camera.setPosition(newPosition);
     }

@@ -1,7 +1,7 @@
-import ActionObject from "./ActionObject";
-import { Vector3 } from "./math/Vector3";
-import { IS_DEBUG } from "../consts";
-import { globalKeyboardManager } from "./KeyboardManager";
+import ActionObject from './ActionObject';
+import { Vector3 } from './math/Vector3';
+import { IS_DEBUG } from '../consts';
+import { globalKeyboardManager } from './KeyboardManager';
 
 // we're rotated 45 degrees around the y axis
 const upDirection = new Vector3(-1, 0, -1).normalize();
@@ -10,7 +10,6 @@ const downDirection = new Vector3(1, 0, 1).normalize();
 const rightDirection = new Vector3(1, 0, -1).normalize();
 
 class Player extends ActionObject {
-
   private moveSpeed = 10.0; // em/s
 
   constructor() {

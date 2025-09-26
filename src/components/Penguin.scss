@@ -1,4 +1,3 @@
-
 .penguin {
   width: 2em;
   height: 3em;
@@ -20,7 +19,6 @@
 }
 
 .wing-group {
-
 }
 
 .wing-group {
@@ -43,7 +41,6 @@
   transform: scaleY(1);
   // animation: eye-blink-animation 3s ease-in-out infinite;
 }
-
 
 @keyframes wing-swing {
   0% {
@@ -71,4 +68,3 @@
     transform: scaleY(0);
   }
 }
-

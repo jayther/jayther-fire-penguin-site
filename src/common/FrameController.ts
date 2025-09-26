@@ -1,7 +1,6 @@
-import { IFrameUpdatable } from "./IFrameUpdatable";
+import { IFrameUpdatable } from './IFrameUpdatable';
 
 class FrameController {
-
   private updatables: IFrameUpdatable[] = [];
   private lastTime: number = 0;
 
@@ -9,7 +8,7 @@ class FrameController {
     this.onAnimationFrame = this.onAnimationFrame.bind(this);
     window.requestAnimationFrame(this.onAnimationFrame);
   }
-  
+
   addUpdatable(updatable: IFrameUpdatable): void {
     this.updatables.push(updatable);
   }
@@ -31,7 +30,7 @@ class FrameController {
     window.requestAnimationFrame(this.onAnimationFrame);
     // console.log('deltaSeconds', deltaSeconds);
   }
-  
+
   private updateFrame(deltaSeconds: number): void {
     this.updatables.forEach(updatable => updatable.updateFrame(deltaSeconds));
   }

@@ -5,10 +5,19 @@ import PlayerCameraController from '../common/PlayerCameraController';
 import ActionObject from '../common/ActionObject';
 import { IS_DEBUG } from '../consts';
 
-export const useCameraController = (camera: Camera, actionObject?: ActionObject | null) => {
+export const useCameraController = (
+  camera: Camera,
+  actionObject?: ActionObject | null
+) => {
   // const [controller] = useState(() => new DebugCameraController(camera));
-  const [controller] = useState(() => IS_DEBUG ? new DebugCameraController(camera) : new PlayerCameraController({ camera, actionObject }));
-  const [sceneTransitioning, setSceneTransitioning] = useState(controller.getSceneTransitioning());
+  const [controller] = useState(() =>
+    IS_DEBUG
+      ? new DebugCameraController(camera)
+      : new PlayerCameraController({ camera, actionObject })
+  );
+  const [sceneTransitioning, setSceneTransitioning] = useState(
+    controller.getSceneTransitioning()
+  );
 
   const setCamera = useCallback(
     (newCamera: Camera) => {
@@ -24,16 +33,18 @@ export const useCameraController = (camera: Camera, actionObject?: ActionObject 
 
   useEffect(() => {
     if (IS_DEBUG) return;
-    (controller as PlayerCameraController).setActionObject(actionObject ?? null);
+    (controller as PlayerCameraController).setActionObject(
+      actionObject ?? null
+    );
   }, [actionObject, controller]);
 
   useEffect(() => {
-    controller.on('scene-transitioning-updated', (event) => {
+    controller.on('scene-transitioning-updated', event => {
       setSceneTransitioning(event.sceneTransitioning);
     });
 
     return () => {
-      controller.off('scene-transitioning-updated', (event) => {
+      controller.off('scene-transitioning-updated', event => {
         setSceneTransitioning(event.sceneTransitioning);
       });
     };

@@ -1,9 +1,9 @@
-import { EventEmitter } from "tsee";
+import { EventEmitter } from 'tsee';
 
 export type KeyboardManagerEventMap = {
   'key-down': (event: KeyboardEvent) => void;
   'key-up': (event: KeyboardEvent) => void;
-}
+};
 
 class KeyboardManager extends EventEmitter<KeyboardManagerEventMap> {
   private keyStates: { [key: string]: boolean } = {};

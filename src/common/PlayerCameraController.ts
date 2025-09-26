@@ -1,16 +1,29 @@
-import ActionObject from "./ActionObject";
-import Camera from "./Camera";
-import CameraController from "./CameraController";
-import { Vector3 } from "./math/Vector3";
+import ActionObject from './ActionObject';
+import Camera from './Camera';
+import CameraController from './CameraController';
+import { Vector3 } from './math/Vector3';
 
 class PlayerCameraController extends CameraController {
-
   private actionObject: ActionObject | null = null;
 
   private cameraRotOffset: Vector3 = new Vector3(Math.PI / 4, Math.PI / 4, 0);
-  private cameraPosOffset: Vector3 = new Vector3(Math.cos(this.cameraRotOffset.y), 0, Math.sin(this.cameraRotOffset.y)).multiply(-20).add(new Vector3(0, 20, 0));
+  private cameraPosOffset: Vector3 = new Vector3(
+    Math.cos(this.cameraRotOffset.y),
+    0,
+    Math.sin(this.cameraRotOffset.y)
+  )
+    .multiply(-20)
+    .add(new Vector3(0, 20, 0));
 
-  constructor({ camera = null, actionObject = null }: { camera: Camera | null, actionObject?: ActionObject | null } = { camera: null, actionObject: null }) {
+  constructor(
+    {
+      camera = null,
+      actionObject = null,
+    }: { camera: Camera | null; actionObject?: ActionObject | null } = {
+      camera: null,
+      actionObject: null,
+    }
+  ) {
     super({ camera: camera, sceneTransitioning: false });
     this.onPositionUpdated = this.onPositionUpdated.bind(this);
     this.actionObject = actionObject;
