@@ -1,7 +1,9 @@
 import Vector3 from './math/Vector3';
 import Transform from './Transform';
+import { IFrameUpdatable } from './IFrameUpdatable';
+import { globalFrameController } from './FrameController';
 
-class Camera extends Transform {
+class Camera extends Transform implements IFrameUpdatable {
   private dirty = false;
   private sceneDiv: HTMLDivElement | null = null;
 
@@ -10,6 +12,11 @@ class Camera extends Transform {
 
   constructor() {
     super();
+    globalFrameController.addUpdatable(this);
+  }
+
+  updateFrame(_deltaSeconds: number): void {
+    this.updateSceneDivTransform();
   }
 
   on(event: string, callback: () => void): void {
@@ -36,19 +43,16 @@ class Camera extends Transform {
   override setPosition(position: Vector3): void {
     super.setPosition(position);
     this.dirty = true;
-    this.updateSceneDivTransform();
   }
 
   override setRotation(rotation: Vector3): void {
     super.setRotation(rotation);
     this.dirty = true;
-    this.updateSceneDivTransform();
   }
 
   override setScale(scale: Vector3): void {
     super.setScale(scale);
     this.dirty = true;
-    this.updateSceneDivTransform();
   }
 
   isDirty(): boolean {

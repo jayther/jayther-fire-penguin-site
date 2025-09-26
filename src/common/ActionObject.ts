@@ -1,6 +1,8 @@
 import Vector3 from "./math/Vector3";
 import Transform from "./Transform";
 import { EventEmitter } from "tsee";
+import { IFrameUpdatable } from "./IFrameUpdatable";
+import { globalFrameController } from "./FrameController";
 
 export type ActionObjectEventMap = {
   'position-updated': ({ position }: { position: Vector3 }) => void;
@@ -9,13 +11,16 @@ export type ActionObjectEventMap = {
 }
 
 
-class ActionObject extends Transform implements EventEmitter<ActionObjectEventMap> {
+class ActionObject extends Transform implements EventEmitter<ActionObjectEventMap>, IFrameUpdatable {
   private object: HTMLElement | null = null;
   private eventEmitter = new EventEmitter<ActionObjectEventMap>();
+  private dirty = false;
+  private velocity = new Vector3(0, 0, 0);
 
   constructor({ object = null }: { object: HTMLElement | null } = { object: null }) {
     super();
     this.object = object;
+    globalFrameController.addUpdatable(this);
   }
 
   setObject(object: HTMLElement | null): void {
@@ -26,23 +31,31 @@ class ActionObject extends Transform implements EventEmitter<ActionObjectEventMa
     return this.object;
   }
 
+  setVelocity(velocity: Vector3): void {
+    this.velocity = velocity;
+  }
+
+  getVelocity(): Vector3 {
+    return this.velocity;
+  }
+
   setPosition(position: Vector3): void {
     super.setPosition(position);
-    this.update();
+    this.dirty = true;
     this.eventEmitter.emit('position-updated', { position });
     console.log('position-updated', position);
   }
 
   setRotation(rotation: Vector3): void {
     super.setRotation(rotation);
-    this.update();
+    this.dirty = true;
     this.eventEmitter.emit('rotation-updated', { rotation });
     console.log('rotation-updated', rotation);
   }
 
   setScale(scale: Vector3): void {
     super.setScale(scale);
-    this.update();
+    this.dirty = true;
     this.eventEmitter.emit('scale-updated', { scale });
   }
 
@@ -127,12 +140,18 @@ class ActionObject extends Transform implements EventEmitter<ActionObjectEventMa
     return this.eventEmitter.maxListeners;
   }
 
-  update(): void {
+  updateStyle(): void {
     if (!this.object) return;
     this.object.style.transform = `translateX(${this.getPosition().x}em) translateY(${this.getPosition().y}em) translateZ(${this.getPosition().z}em) rotateX(${this.getRotation().x}rad) rotateY(${this.getRotation().y}rad) rotateZ(${this.getRotation().z}rad) scaleX(${this.getScale().x}) scaleY(${this.getScale().y}) scaleZ(${this.getScale().z})`;
-
   }
   
+  updateFrame(deltaSeconds: number): void {
+    if (!this.dirty && this.velocity.x === 0 && this.velocity.y === 0 && this.velocity.z === 0) return;
+    
+    this.setPosition(this.getPosition().add(this.velocity.multiply(deltaSeconds)));
+    this.updateStyle();
+    this.dirty = false;
+  }
 }
 
 export default ActionObject;

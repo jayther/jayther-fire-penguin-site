@@ -1,3 +1,5 @@
+const EPSILON = 0.00001;
+
 export class Vector3 {
   public x: number;
   public y: number;
@@ -45,6 +47,9 @@ export class Vector3 {
 
   normalize(): Vector3 {
     const mag = this.magnitude();
+    if (mag < EPSILON) {
+      return new Vector3(0, 0, 0);
+    }
     return mag === 0 ? new Vector3(0, 0, 0) : this.divide(mag);
   }
 
@@ -79,6 +84,12 @@ export class Vector3 {
 
   normalizeMut(): Vector3 {
     const mag = this.magnitude();
+    if (mag < EPSILON) {
+      this.x = 0;
+      this.y = 0;
+      this.z = 0;
+      return this;
+    }
     if (mag !== 0) {
       this.x /= mag;
       this.y /= mag;
