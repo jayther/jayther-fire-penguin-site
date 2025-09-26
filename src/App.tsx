@@ -12,11 +12,13 @@ import useCameraController from './hooks/UseCameraController';
 import { useEffect, useState } from 'react';
 import DebugStats from './components/DebugStats';
 import useGlobalCamera from './hooks/UseGlobalCamera';
+import usePlayer from './hooks/UsePlayer';
 
 function App() {
+  const player = usePlayer();
   const [sceneDiv, setSceneDiv] = useState<HTMLDivElement | null>(null);
   const camera = useGlobalCamera();
-  useCameraController(camera);
+  const { sceneTransitioning } = useCameraController(camera, player);
 
   useEffect(() => {
     camera.setSceneDiv(sceneDiv);
@@ -25,7 +27,7 @@ function App() {
   return (
     <>
       <div className="app">
-        <Scene ref={setSceneDiv} />
+        <Scene ref={setSceneDiv} sceneTransitioning={sceneTransitioning} />
       </div>
       <DebugStats />
     </>

@@ -1,20 +1,19 @@
 import Camera from './Camera';
 import Matrix3 from './math/Matrix3';
 import Vector3 from './math/Vector3';
+import CameraController from './CameraController';
 
-class DebugCameraController {
+class DebugCameraController extends CameraController {
   private moveSpeed = 5.0;
   private rotationSpeed = Math.PI / 24;
 
-  constructor(private camera: Camera) {
+  constructor(camera: Camera) {
+    super({ camera: camera, sceneTransitioning: true });
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
-  setCamera(camera: Camera): void {
-    this.camera = camera;
-  }
-
   private handleKeyDown = (event: KeyboardEvent) => {
+    if (!this.camera) return;
     if (event.key === 'w') {
       const currentPosition = this.camera.getPosition();
       const currentRotation = this.camera.getRotation();
