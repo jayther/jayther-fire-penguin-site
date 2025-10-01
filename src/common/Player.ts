@@ -32,6 +32,7 @@ class Player extends ActionObject {
   private waddleEndDuration: number = 0.25; // seconds
   private waddleEndAngle: number = 0;
   private waddleAngle: number = Math.PI / 24; // 7.5 degrees in radians
+  private lastWaddleAngle: number = -1; // used to detect direction of waddle
 
   constructor() {
     super();
@@ -96,11 +97,12 @@ class Player extends ActionObject {
           this.waddleAngle,
           (time - this.waddleStartTime) / this.waddleDuration
         );
-        if (angle > 0) {
+        if (angle > 0 && this.lastWaddleAngle < 0) {
           this.setAnchor(new Vector3(1.0, 0, 0));
-        } else {
+        } else if (angle <= 0 && this.lastWaddleAngle >= 0) {
           this.setAnchor(new Vector3(-1.0, 0, 0));
         }
+        this.lastWaddleAngle = angle;
         this.setRotation(new Vector3(0, penguinAngle, angle));
       }
     } else if (this.waddleState === 'ending') {
@@ -115,11 +117,12 @@ class Player extends ActionObject {
           this.waddleEndAngle,
           (time - this.waddleEndTime) / this.waddleEndDuration
         );
-        if (angle > 0) {
+        if (angle > 0 && this.lastWaddleAngle < 0) {
           this.setAnchor(new Vector3(1.0, 0, 0));
-        } else {
+        } else if (angle <= 0 && this.lastWaddleAngle >= 0) {
           this.setAnchor(new Vector3(-1.0, 0, 0));
         }
+        this.lastWaddleAngle = angle;
         this.setRotation(new Vector3(0, penguinAngle, angle));
       }
     }
