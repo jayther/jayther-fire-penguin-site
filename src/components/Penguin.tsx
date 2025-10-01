@@ -1,5 +1,4 @@
 import './Penguin.scss';
-import PenguinSVG from '../assets/penguin-full-body.svg';
 import { forwardRef } from 'react';
 
 const Penguin = forwardRef(
@@ -9,7 +8,11 @@ const Penguin = forwardRef(
   ) => {
     return (
       <div className="penguin" {...props} ref={ref}>
-        <PenguinSVG />
+        <div className="penguin-waddle">
+          <div className="penguin-svg-container">
+
+          </div>
+        </div>
       </div>
     );
   }

@@ -4,6 +4,7 @@ class Transform {
   private position: Vector3 = new Vector3(0, 0, 0);
   private rotation: Vector3 = new Vector3(0, 0, 0); // Euler angles
   private scale: Vector3 = new Vector3(1, 1, 1);
+  private anchor: Vector3 = new Vector3(0, 0, 0);
 
   constructor() {}
 
@@ -41,6 +42,18 @@ class Transform {
 
   setScale(scale: Vector3): void {
     this.scale = scale.clone();
+  }
+
+  getAnchor(): Vector3 {
+    return this.anchor.clone();
+  }
+
+  getAnchorMut(): Vector3 {
+    return this.anchor;
+  }
+
+  setAnchor(anchor: Vector3): void {
+    this.anchor = anchor.clone();
   }
 }
 

@@ -13,7 +13,12 @@ class PlayerCameraController extends CameraController {
     Math.sin(this.cameraRotOffset.y)
   )
     .multiply(-20)
-    .add(new Vector3(0, 20, 0));
+    .add(new Vector3(0, 20, 0))
+    .add(
+      new Vector3(1, 0, -1)
+        .normalize()
+        .multiply(0.5),
+    );
 
   constructor(
     {

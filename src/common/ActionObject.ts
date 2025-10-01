@@ -8,6 +8,7 @@ export type ActionObjectEventMap = {
   'position-updated': ({ position }: { position: Vector3 }) => void;
   'rotation-updated': ({ rotation }: { rotation: Vector3 }) => void;
   'scale-updated': ({ scale }: { scale: Vector3 }) => void;
+  'anchor-updated': ({ anchor }: { anchor: Vector3 }) => void;
 };
 
 class ActionObject
@@ -61,6 +62,12 @@ class ActionObject
     super.setScale(scale);
     this.dirty = true;
     this.eventEmitter.emit('scale-updated', { scale });
+  }
+
+  setAnchor(anchor: Vector3): void {
+    super.setAnchor(anchor);
+    this.dirty = true;
+    this.eventEmitter.emit('anchor-updated', { anchor });
   }
 
   on<K extends keyof ActionObjectEventMap>(
@@ -172,7 +179,11 @@ class ActionObject
 
   updateStyle(): void {
     if (!this.object) return;
-    this.object.style.transform = `translateX(${this.getPosition().x}em) translateY(${this.getPosition().y}em) translateZ(${this.getPosition().z}em) rotateX(${this.getRotation().x}rad) rotateY(${this.getRotation().y}rad) rotateZ(${this.getRotation().z}rad) scaleX(${this.getScale().x}) scaleY(${this.getScale().y}) scaleZ(${this.getScale().z})`;
+    const position = this.getPosition();
+    const anchor = this.getAnchor();
+    const rotation = this.getRotation();
+    const scale = this.getScale();
+    this.object.style.transform = `translate3d(${position.x}em, ${position.y}em, ${position.z}em) rotateY(${rotation.y}rad) translate3d(${anchor.x}em, ${anchor.y}em, ${anchor.z}em) rotateX(${rotation.x}rad) rotateZ(${rotation.z}rad) scale3d(${scale.x}, ${scale.y}, ${scale.z}) translate3d(${-anchor.x}em, ${-anchor.y}em, ${-anchor.z}em)`;
   }
 
   updateFrame(deltaSeconds: number): void {

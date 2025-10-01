@@ -17,6 +17,10 @@ class FrameController {
     this.updatables = this.updatables.filter(u => u !== updatable);
   }
 
+  getTime(): number {
+    return this.lastTime / 1000;
+  }
+
   private onAnimationFrame(timeMs: number): void {
     if (this.lastTime === 0) {
       this.lastTime = timeMs;
