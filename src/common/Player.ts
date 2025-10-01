@@ -29,7 +29,7 @@ class Player extends ActionObject {
   private waddleStartTime: number = 0;
   private waddleDuration: number = 1.0; // seconds
   private waddleEndTime: number = 0;
-  private waddleEndDuration: number = 0.5; // seconds
+  private waddleEndDuration: number = 0.25; // seconds
   private waddleEndAngle: number = 0;
   private waddleAngle: number = Math.PI / 24; // 7.5 degrees in radians
 
