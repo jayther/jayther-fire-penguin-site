@@ -29,7 +29,6 @@ const DebugStats = () => {
         `${scale.x.toFixed(2)}, ${scale.y.toFixed(2)}, ${scale.z.toFixed(2)}`
       );
       setScale(camera.getScale().toString());
-      console.log('Camera updated');
     };
 
     camera.on('update', updateCallback);

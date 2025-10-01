@@ -48,14 +48,12 @@ class ActionObject
     super.setPosition(position);
     this.dirty = true;
     this.eventEmitter.emit('position-updated', { position });
-    console.log('position-updated', position);
   }
 
   setRotation(rotation: Vector3): void {
     super.setRotation(rotation);
     this.dirty = true;
     this.eventEmitter.emit('rotation-updated', { rotation });
-    console.log('rotation-updated', rotation);
   }
 
   setScale(scale: Vector3): void {

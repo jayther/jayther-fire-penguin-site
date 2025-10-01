@@ -11,8 +11,10 @@ const downDirection = new Vector3(1, 0, 1).normalize();
 const rightDirection = new Vector3(1, 0, -1).normalize();
 
 type WaddleState = 'idle' | 'waddle' | 'ending';
+type FlipState = 'left' | 'turning-left' | 'right' | 'turning-right';
 
 const penguinAngle = Math.PI / 4;
+const penguinOtherAngle = (5 * Math.PI) / 4;
 
 const waddleLerp = (angleRad: number, t: number) =>
   Math.sin(t * Math.PI * 2) * angleRad;
@@ -23,22 +25,33 @@ const waddleEndLerp = (startAngle: number, t: number) => {
   return startAngle * (1 - easeOut);
 };
 
+const flipLerp = (startAngle: number, endAngle: number, t: number) => {
+  // Ease out cubic function: 1 - (1-t)^3
+  const t2 = 1 - Math.pow(1 - t, 3);
+  return startAngle + (endAngle - startAngle) * t2;
+};
+
 class Player extends ActionObject {
   private moveSpeed = 10.0; // em/s
   private waddleState: WaddleState = 'idle';
   private waddleStartTime: number = 0;
-  private waddleDuration: number = 1.0; // seconds
+  private waddleDuration: number = 0.5; // seconds
   private waddleEndTime: number = 0;
   private waddleEndDuration: number = 0.25; // seconds
   private waddleEndAngle: number = 0;
   private waddleAngle: number = Math.PI / 24; // 7.5 degrees in radians
   private lastWaddleAngle: number = -1; // used to detect direction of waddle
+  private flipState: FlipState = 'left';
+  // private flipAngle: number = penguinAngle;
+  private flipStartAngle: number = penguinAngle;
+  private flipDuration: number = 0.25; // seconds
+  private flipStartTime: number = 0;
 
   constructor() {
     super();
 
     this.setPosition(new Vector3(0, 0, 0));
-    this.setRotation(new Vector3(0, penguinAngle, 0));
+    this.setRotation(new Vector3(0, this.flipStartAngle, 0));
     this.setAnchor(new Vector3(0, 0, 0));
     if (!IS_DEBUG) {
       this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -80,6 +93,12 @@ class Player extends ActionObject {
     const velocity = this.getVelocity();
     const isMoving = velocity.x !== 0 || velocity.y !== 0 || velocity.z !== 0;
     const time = globalFrameController.getTime(); // seconds
+    const rotation = this.getRotation();
+    let zAngle = rotation.z;
+    let yAngle = rotation.y;
+    let anyAngleChanged = false;
+
+    // waddle states
     if (this.waddleState === 'idle') {
       if (isMoving) {
         this.waddleStartTime = time;
@@ -103,15 +122,18 @@ class Player extends ActionObject {
           this.setAnchor(new Vector3(-1.0, 0, 0));
         }
         this.lastWaddleAngle = angle;
-        this.setRotation(new Vector3(0, penguinAngle, angle));
+        zAngle = angle;
+        anyAngleChanged = true;
       }
     } else if (this.waddleState === 'ending') {
       if (isMoving) {
+        this.waddleStartTime = time;
         this.waddleState = 'waddle';
         // TODO: use current angle to find a correct sensible waddle start time to resume from
       } else if (time >= this.waddleEndTime + this.waddleEndDuration) {
         this.waddleState = 'idle';
-        this.setRotation(new Vector3(0, penguinAngle, 0));
+        zAngle = 0;
+        anyAngleChanged = true;
       } else {
         const angle = waddleEndLerp(
           this.waddleEndAngle,
@@ -123,8 +145,66 @@ class Player extends ActionObject {
           this.setAnchor(new Vector3(-1.0, 0, 0));
         }
         this.lastWaddleAngle = angle;
-        this.setRotation(new Vector3(0, penguinAngle, angle));
+        zAngle = angle;
+        anyAngleChanged = true;
       }
+    }
+
+    // console.log('velocity slope', velocitySlope);
+    const targetFlipState =
+      velocity.z > velocity.x
+        ? 'turning-left'
+        : velocity.z < velocity.x
+          ? 'turning-right'
+          : this.flipState;
+
+    // flip state
+    if (this.flipState === 'left') {
+      if (targetFlipState === 'turning-right') {
+        this.flipStartAngle = yAngle;
+        this.flipStartTime = time;
+        this.flipState = 'turning-right';
+      }
+    } else if (this.flipState === 'right') {
+      if (targetFlipState === 'turning-left') {
+        this.flipStartAngle = yAngle;
+        this.flipStartTime = time;
+        this.flipState = 'turning-left';
+      }
+    } else if (this.flipState === 'turning-left') {
+      if (targetFlipState === 'turning-right') {
+        this.flipStartAngle = yAngle;
+        this.flipStartTime = time;
+        this.flipState = 'turning-right';
+      } else if (time >= this.flipStartTime + this.flipDuration) {
+        this.flipState = 'left';
+      } else {
+        yAngle = flipLerp(
+          this.flipStartAngle,
+          penguinAngle,
+          (time - this.flipStartTime) / this.flipDuration
+        );
+        anyAngleChanged = true;
+      }
+    } else if (this.flipState === 'turning-right') {
+      if (targetFlipState === 'turning-left') {
+        this.flipStartAngle = yAngle;
+        this.flipStartTime = time;
+        this.flipState = 'turning-left';
+      } else if (time >= this.flipStartTime + this.flipDuration) {
+        this.flipState = 'right';
+      } else {
+        yAngle = flipLerp(
+          this.flipStartAngle,
+          penguinOtherAngle,
+          (time - this.flipStartTime) / this.flipDuration
+        );
+        anyAngleChanged = true;
+      }
+    }
+
+    if (anyAngleChanged) {
+      this.setRotation(new Vector3(0, yAngle, zAngle));
     }
 
     super.updateFrame(deltaSeconds);
