@@ -9,9 +9,7 @@ const Penguin = forwardRef(
     return (
       <div className="penguin" {...props} ref={ref}>
         <div className="penguin-waddle">
-          <div className="penguin-svg-container">
-
-          </div>
+          <div className="penguin-svg-container"></div>
         </div>
       </div>
     );

@@ -14,14 +14,14 @@ type WaddleState = 'idle' | 'waddle' | 'ending';
 
 const penguinAngle = Math.PI / 4;
 
-const waddleLerp = (angleRad: number, t: number) => Math.sin(t * Math.PI * 2) * angleRad;
+const waddleLerp = (angleRad: number, t: number) =>
+  Math.sin(t * Math.PI * 2) * angleRad;
 
 const waddleEndLerp = (startAngle: number, t: number) => {
   // Ease out cubic function: 1 - (1-t)^3
   const easeOut = 1 - Math.pow(1 - t, 3);
   return startAngle * (1 - easeOut);
 };
-
 
 class Player extends ActionObject {
   private moveSpeed = 10.0; // em/s
@@ -32,7 +32,6 @@ class Player extends ActionObject {
   private waddleEndDuration: number = 0.5; // seconds
   private waddleEndAngle: number = 0;
   private waddleAngle: number = Math.PI / 24; // 7.5 degrees in radians
-
 
   constructor() {
     super();
@@ -93,7 +92,10 @@ class Player extends ActionObject {
         this.waddleState = 'ending';
         this.waddleEndAngle = this.getRotation().z;
       } else {
-        const angle = waddleLerp(this.waddleAngle, (time - this.waddleStartTime) / this.waddleDuration);
+        const angle = waddleLerp(
+          this.waddleAngle,
+          (time - this.waddleStartTime) / this.waddleDuration
+        );
         if (angle > 0) {
           this.setAnchor(new Vector3(1.0, 0, 0));
         } else {
@@ -109,13 +111,16 @@ class Player extends ActionObject {
         this.waddleState = 'idle';
         this.setRotation(new Vector3(0, penguinAngle, 0));
       } else {
-        const angle = waddleEndLerp(this.waddleEndAngle, (time - this.waddleEndTime) / this.waddleEndDuration);
+        const angle = waddleEndLerp(
+          this.waddleEndAngle,
+          (time - this.waddleEndTime) / this.waddleEndDuration
+        );
         if (angle > 0) {
           this.setAnchor(new Vector3(1.0, 0, 0));
         } else {
           this.setAnchor(new Vector3(-1.0, 0, 0));
         }
-        this.setRotation(new Vector3(0, penguinAngle, angle))
+        this.setRotation(new Vector3(0, penguinAngle, angle));
       }
     }
 
