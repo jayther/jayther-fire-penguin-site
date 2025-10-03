@@ -16,6 +16,11 @@ class Camera extends Transform implements IFrameUpdatable {
   }
 
   updateFrame(_deltaSeconds: number): void {
+    // this.updateSceneDivTransform();
+    // do nothing
+  }
+
+  updateStyle(_deltaSeconds: number): void {
     this.updateSceneDivTransform();
   }
 

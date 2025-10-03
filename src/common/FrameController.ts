@@ -1,3 +1,4 @@
+import { globalCollisionController } from './CollisionController';
 import { IFrameUpdatable } from './IFrameUpdatable';
 
 class FrameController {
@@ -31,12 +32,20 @@ class FrameController {
     const deltaSeconds = (timeMs - this.lastTime) / 1000;
     this.lastTime = timeMs;
     this.updateFrame(deltaSeconds);
+    globalCollisionController.update(deltaSeconds);
+    this.updateStyle(deltaSeconds);
     window.requestAnimationFrame(this.onAnimationFrame);
-    // console.log('deltaSeconds', deltaSeconds);
   }
 
   private updateFrame(deltaSeconds: number): void {
-    this.updatables.forEach(updatable => updatable.updateFrame(deltaSeconds));
+    for (const updatable of this.updatables) {
+      updatable.updateFrame(deltaSeconds);
+    }
+  }
+  private updateStyle(deltaSeconds: number): void {
+    for (const updatable of this.updatables) {
+      updatable.updateStyle(deltaSeconds);
+    }
   }
 }
 

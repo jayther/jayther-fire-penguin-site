@@ -3,6 +3,8 @@ import { Vector3 } from './math/Vector3';
 import { IS_DEBUG } from '../consts';
 import { globalKeyboardManager } from './KeyboardManager';
 import { globalFrameController } from './FrameController';
+import AABB from './math/AABB';
+import Vector2 from './math/Vector2';
 
 // we're rotated 45 degrees around the y axis
 const upDirection = new Vector3(-1, 0, -1).normalize();
@@ -48,11 +50,13 @@ class Player extends ActionObject {
   private flipStartTime: number = 0;
 
   constructor() {
-    super();
+    super({ staticObject: false, collisionEnabled: true });
 
     this.setPosition(new Vector3(0, 0, 0));
     this.setRotation(new Vector3(0, this.flipStartAngle, 0));
     this.setAnchor(new Vector3(0, 0, 0));
+    this.setCollisionAABB(new AABB(new Vector2(0, 0), new Vector2(0.5, 0.5)));
+
     if (!IS_DEBUG) {
       this.handleKeyDown = this.handleKeyDown.bind(this);
       this.handleKeyUp = this.handleKeyUp.bind(this);

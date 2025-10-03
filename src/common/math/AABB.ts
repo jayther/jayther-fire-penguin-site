@@ -6,7 +6,10 @@ export class AABB {
   public center: Vector2;
   public halfExtents: Vector2;
 
-  constructor(center: Vector2 = new Vector2(), halfExtents: Vector2 = new Vector2()) {
+  constructor(
+    center: Vector2 = new Vector2(),
+    halfExtents: Vector2 = new Vector2()
+  ) {
     this.center = center.clone();
     this.halfExtents = halfExtents.clone();
   }
@@ -38,8 +41,7 @@ export class AABB {
     let maxX = points[0].x;
     let maxY = points[0].y;
 
-    for (let i = 1; i < points.length; i++) {
-      const point = points[i];
+    for (const point of points.slice(1)) {
       minX = Math.min(minX, point.x);
       minY = Math.min(minY, point.y);
       maxX = Math.max(maxX, point.x);
@@ -104,10 +106,10 @@ export class AABB {
   intersectsCircle(center: Vector2, radius: number): boolean {
     const dx = Math.abs(center.x - this.center.x);
     const dy = Math.abs(center.y - this.center.y);
-    
+
     const closestX = Math.min(dx, this.halfExtents.x);
     const closestY = Math.min(dy, this.halfExtents.y);
-    
+
     const distanceSquared = (dx - closestX) ** 2 + (dy - closestY) ** 2;
     return distanceSquared <= radius * radius;
   }
@@ -119,17 +121,17 @@ export class AABB {
     }
 
     const intersectionCenter = new Vector2(
-      Math.min(this.center.x, other.center.x) + 
-      Math.abs(this.center.x - other.center.x) * 0.5,
-      Math.min(this.center.y, other.center.y) + 
-      Math.abs(this.center.y - other.center.y) * 0.5
+      Math.min(this.center.x, other.center.x) +
+        Math.abs(this.center.x - other.center.x) * 0.5,
+      Math.min(this.center.y, other.center.y) +
+        Math.abs(this.center.y - other.center.y) * 0.5
     );
 
     const intersectionHalfExtents = new Vector2(
-      Math.min(this.halfExtents.x, other.halfExtents.x) - 
-      Math.abs(this.center.x - other.center.x) * 0.5,
-      Math.min(this.halfExtents.y, other.halfExtents.y) - 
-      Math.abs(this.center.y - other.center.y) * 0.5
+      Math.min(this.halfExtents.x, other.halfExtents.x) -
+        Math.abs(this.center.x - other.center.x) * 0.5,
+      Math.min(this.halfExtents.y, other.halfExtents.y) -
+        Math.abs(this.center.y - other.center.y) * 0.5
     );
 
     return new AABB(intersectionCenter, intersectionHalfExtents);
@@ -142,7 +144,7 @@ export class AABB {
 
     const dx = other.center.x - this.center.x;
     const dy = other.center.y - this.center.y;
-    
+
     const overlapX = this.halfExtents.x + other.halfExtents.x - Math.abs(dx);
     const overlapY = this.halfExtents.y + other.halfExtents.y - Math.abs(dy);
 
@@ -161,23 +163,26 @@ export class AABB {
   getClosestPoint(point: Vector2): Vector2 {
     const dx = point.x - this.center.x;
     const dy = point.y - this.center.y;
-    
-    const closestX = Math.max(-this.halfExtents.x, Math.min(dx, this.halfExtents.x));
-    const closestY = Math.max(-this.halfExtents.y, Math.min(dy, this.halfExtents.y));
-    
-    return new Vector2(
-      this.center.x + closestX,
-      this.center.y + closestY
+
+    const closestX = Math.max(
+      -this.halfExtents.x,
+      Math.min(dx, this.halfExtents.x)
     );
+    const closestY = Math.max(
+      -this.halfExtents.y,
+      Math.min(dy, this.halfExtents.y)
+    );
+
+    return new Vector2(this.center.x + closestX, this.center.y + closestY);
   }
 
   getDistanceToPoint(point: Vector2): number {
     const dx = Math.abs(point.x - this.center.x) - this.halfExtents.x;
     const dy = Math.abs(point.y - this.center.y) - this.halfExtents.y;
-    
+
     const dxClamped = Math.max(0, dx);
     const dyClamped = Math.max(0, dy);
-    
+
     return Math.sqrt(dxClamped * dxClamped + dyClamped * dyClamped);
   }
 
@@ -186,12 +191,18 @@ export class AABB {
       return 0;
     }
 
-    const dx = Math.abs(other.center.x - this.center.x) - this.halfExtents.x - other.halfExtents.x;
-    const dy = Math.abs(other.center.y - this.center.y) - this.halfExtents.y - other.halfExtents.y;
-    
+    const dx =
+      Math.abs(other.center.x - this.center.x) -
+      this.halfExtents.x -
+      other.halfExtents.x;
+    const dy =
+      Math.abs(other.center.y - this.center.y) -
+      this.halfExtents.y -
+      other.halfExtents.y;
+
     const dxClamped = Math.max(0, dx);
     const dyClamped = Math.max(0, dy);
-    
+
     return Math.sqrt(dxClamped * dxClamped + dyClamped * dyClamped);
   }
 
@@ -218,21 +229,21 @@ export class AABB {
   expand(point: Vector2): AABB {
     const dx = Math.abs(point.x - this.center.x);
     const dy = Math.abs(point.y - this.center.y);
-    
+
     if (dx > this.halfExtents.x) {
       const newHalfExtentsX = (this.halfExtents.x + dx) * 0.5;
       const newCenterX = (this.center.x + point.x) * 0.5;
       this.center.x = newCenterX;
       this.halfExtents.x = newHalfExtentsX;
     }
-    
+
     if (dy > this.halfExtents.y) {
       const newHalfExtentsY = (this.halfExtents.y + dy) * 0.5;
       const newCenterY = (this.center.y + point.y) * 0.5;
       this.center.y = newCenterY;
       this.halfExtents.y = newHalfExtentsY;
     }
-    
+
     return this;
   }
 
@@ -241,7 +252,7 @@ export class AABB {
     const minY = Math.min(this.min.y, other.min.y);
     const maxX = Math.max(this.max.x, other.max.x);
     const maxY = Math.max(this.max.y, other.max.y);
-    
+
     this.center.set((minX + maxX) * 0.5, (minY + maxY) * 0.5);
     this.halfExtents.set((maxX - minX) * 0.5, (maxY - minY) * 0.5);
     return this;
@@ -264,7 +275,10 @@ export class AABB {
   }
 
   equals(other: AABB): boolean {
-    return this.center.equals(other.center) && this.halfExtents.equals(other.halfExtents);
+    return (
+      this.center.equals(other.center) &&
+      this.halfExtents.equals(other.halfExtents)
+    );
   }
 
   isValid(): boolean {
@@ -285,10 +299,10 @@ export class AABB {
     const minY = Math.min(a.min.y, b.min.y);
     const maxX = Math.max(a.max.x, b.max.x);
     const maxY = Math.max(a.max.y, b.max.y);
-    
+
     const center = new Vector2((minX + maxX) * 0.5, (minY + maxY) * 0.5);
     const halfExtents = new Vector2((maxX - minX) * 0.5, (maxY - minY) * 0.5);
-    
+
     return new AABB(center, halfExtents);
   }
 
@@ -298,17 +312,16 @@ export class AABB {
     }
 
     const intersectionCenter = new Vector2(
-      Math.min(a.center.x, b.center.x) + 
-      Math.abs(a.center.x - b.center.x) * 0.5,
-      Math.min(a.center.y, b.center.y) + 
-      Math.abs(a.center.y - b.center.y) * 0.5
+      Math.min(a.center.x, b.center.x) +
+        Math.abs(a.center.x - b.center.x) * 0.5,
+      Math.min(a.center.y, b.center.y) + Math.abs(a.center.y - b.center.y) * 0.5
     );
 
     const intersectionHalfExtents = new Vector2(
-      Math.min(a.halfExtents.x, b.halfExtents.x) - 
-      Math.abs(a.center.x - b.center.x) * 0.5,
-      Math.min(a.halfExtents.y, b.halfExtents.y) - 
-      Math.abs(a.center.y - b.center.y) * 0.5
+      Math.min(a.halfExtents.x, b.halfExtents.x) -
+        Math.abs(a.center.x - b.center.x) * 0.5,
+      Math.min(a.halfExtents.y, b.halfExtents.y) -
+        Math.abs(a.center.y - b.center.y) * 0.5
     );
 
     return new AABB(intersectionCenter, intersectionHalfExtents);

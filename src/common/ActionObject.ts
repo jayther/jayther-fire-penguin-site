@@ -3,6 +3,9 @@ import Transform from './Transform';
 import { EventEmitter } from 'tsee';
 import { IFrameUpdatable } from './IFrameUpdatable';
 import { globalFrameController } from './FrameController';
+import AABB from './math/AABB';
+import Vector2 from './math/Vector2';
+import { globalCollisionController } from './CollisionController';
 
 export type ActionObjectEventMap = {
   'position-updated': ({ position }: { position: Vector3 }) => void;
@@ -19,13 +22,45 @@ class ActionObject
   private eventEmitter = new EventEmitter<ActionObjectEventMap>();
   private dirty = false;
   private velocity = new Vector3(0, 0, 0);
+  private collisionAABB = new AABB(new Vector2(0, 0), new Vector2(0, 0));
+  private collisionEnabled = false;
+  private staticObject = true;
 
   constructor(
-    { object = null }: { object: HTMLElement | null } = { object: null }
+    {
+      object = null,
+      staticObject = true,
+      collisionEnabled = false,
+    }: {
+      object?: HTMLElement | null;
+      staticObject?: boolean;
+      collisionEnabled?: boolean;
+    } = { object: null, staticObject: true, collisionEnabled: false }
   ) {
     super();
     this.object = object;
+    this.staticObject = staticObject;
+    this.collisionEnabled = collisionEnabled;
     globalFrameController.addUpdatable(this);
+    this.maybeAddToCollisionController();
+  }
+
+  maybeAddToCollisionController(): void {
+    if (!this.collisionEnabled) {
+      globalCollisionController.removeStaticObject(this);
+      globalCollisionController.removeMovingObject(this);
+    } else if (this.staticObject) {
+      globalCollisionController.addStaticObject(this);
+      globalCollisionController.removeMovingObject(this);
+    } else {
+      globalCollisionController.addMovingObject(this);
+      globalCollisionController.removeStaticObject(this);
+    }
+  }
+
+  updateCollisionAABB(): void {
+    const position = this.getPositionMut();
+    this.collisionAABB.center.set(position.x, position.y);
   }
 
   setObject(object: HTMLElement | null): void {
@@ -66,6 +101,32 @@ class ActionObject
     super.setAnchor(anchor);
     this.dirty = true;
     this.eventEmitter.emit('anchor-updated', { anchor });
+  }
+
+  setCollisionEnabled(collisionEnabled: boolean): void {
+    this.collisionEnabled = collisionEnabled;
+    this.maybeAddToCollisionController();
+  }
+
+  getCollisionEnabled(): boolean {
+    return this.collisionEnabled;
+  }
+
+  setStaticObject(staticObject: boolean): void {
+    this.staticObject = staticObject;
+    this.maybeAddToCollisionController();
+  }
+
+  getStaticObject(): boolean {
+    return this.staticObject;
+  }
+
+  setCollisionAABB(collisionAABB: AABB): void {
+    this.collisionAABB = collisionAABB;
+  }
+
+  getCollisionAABB(): AABB {
+    return this.collisionAABB;
   }
 
   on<K extends keyof ActionObjectEventMap>(
@@ -175,7 +236,7 @@ class ActionObject
     return this.eventEmitter.maxListeners;
   }
 
-  updateStyle(): void {
+  updateStyle(_deltaSeconds: number): void {
     if (!this.object) return;
     const position = this.getPosition();
     const anchor = this.getAnchor();
@@ -196,7 +257,7 @@ class ActionObject
     this.setPosition(
       this.getPosition().add(this.velocity.multiply(deltaSeconds))
     );
-    this.updateStyle();
+    this.updateCollisionAABB();
     this.dirty = false;
   }
 }
