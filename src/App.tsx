@@ -25,12 +25,12 @@ function App() {
   }, [sceneDiv, camera]);
 
   return (
-    <>
+    <Router>
       <div className="app">
         <Scene ref={setSceneDiv} sceneTransitioning={sceneTransitioning} />
       </div>
       <DebugStats />
-    </>
+    </Router>
   );
   // return (
   //   <Router>

@@ -45,6 +45,12 @@ class ActionObject
     this.maybeAddToCollisionController();
   }
 
+  destroy(): void {
+    globalFrameController.removeUpdatable(this);
+    globalCollisionController.removeStaticObject(this);
+    globalCollisionController.removeMovingObject(this);
+  }
+
   maybeAddToCollisionController(): void {
     if (!this.collisionEnabled) {
       globalCollisionController.removeStaticObject(this);
@@ -60,7 +66,7 @@ class ActionObject
 
   updateCollisionAABB(): void {
     const position = this.getPositionMut();
-    this.collisionAABB.center.set(position.x, position.y);
+    this.collisionAABB.center.set(position.x, position.z);
   }
 
   setObject(object: HTMLElement | null): void {

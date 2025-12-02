@@ -5,6 +5,7 @@ import Ocean from './Ocean';
 import Penguin from './Penguin';
 import useClassName from '../hooks/UseClassName';
 import usePlayer from '../hooks/UsePlayer';
+import SimpleBarrier from './SimpleBarrier';
 
 const Scene = forwardRef(
   (
@@ -29,6 +30,7 @@ const Scene = forwardRef(
         <div className="right-wall"></div>
         <Ocean />
         <IceFloor />
+        <SimpleBarrier id="barrier-1" x={10} y={10} halfXExtent={10} halfYExtent={10} showArea={true} />
         <Penguin ref={setPenguin} />
       </div>
     );
