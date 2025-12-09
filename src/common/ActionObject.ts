@@ -7,6 +7,8 @@ import AABB from './math/AABB';
 import Vector2 from './math/Vector2';
 import { globalCollisionController } from './CollisionController';
 
+let idPool = 0;
+
 export type ActionObjectEventMap = {
   'position-updated': ({ position }: { position: Vector3 }) => void;
   'rotation-updated': ({ rotation }: { rotation: Vector3 }) => void;
@@ -25,6 +27,7 @@ class ActionObject
   private collisionAABB = new AABB(new Vector2(0, 0), new Vector2(0, 0));
   private collisionEnabled = false;
   private staticObject = true;
+  private id = idPool++;
 
   constructor(
     {
@@ -49,6 +52,10 @@ class ActionObject
     globalFrameController.removeUpdatable(this);
     globalCollisionController.removeStaticObject(this);
     globalCollisionController.removeMovingObject(this);
+  }
+
+  getId(): number {
+    return this.id;
   }
 
   maybeAddToCollisionController(): void {
